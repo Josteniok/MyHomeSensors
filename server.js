@@ -15,7 +15,8 @@ const sensorgroupid = process.env.SENSOR_GROUP_ID || "";
 // Declare a route
 app.get('/', (req, res) => {
   // res.send('Hello, world')
-  res.send(purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey))
+  // res.send(purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey))
+  console.log(purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey))
 })
 
 const port = process.env.PORT || 3000;
