@@ -9,7 +9,7 @@ const outdoorsensorid = process.env.OUTDOOR_SENSOR_ID || "";
 const indoorsensorindex = process.env.INDOOR_SENSOR_INDEX || "";
 const sensorgroupindex = process.env.SENSOR_GROUP_INDEX || "";
 
-import {getDetails} from '../purpleair/purpleairdumpall';
+import {getDetails} from './purpleair/purpleairdumpall';
 
 // Declare a route
 fastify.get('/', async (request, reply) => {
