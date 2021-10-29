@@ -4,6 +4,8 @@
 const express = require('express');
 const app = express();
 
+const purpleairdump = require('./purpleair/purpleairdumpall');
+
 // PurpleAir API settings
 const purpleAirApiReadKey = process.env.API_READ_KEY || "";
 const outdoorsensorid = process.env.OUTDOOR_SENSOR_ID || "";

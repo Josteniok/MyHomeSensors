@@ -1,6 +1,6 @@
 'use strict';
 
-export function getDetails(sensorid, purpleAirApiReadKey) {
+function getDetails(sensorid, purpleAirApiReadKey) {
     let customHeader = new Headers();
     customHeader.append('X-API-Key', purpleAirApiReadKey);
     let initObject = {
@@ -15,3 +15,5 @@ export function getDetails(sensorid, purpleAirApiReadKey) {
         console.log("ERROR: ", err);
     });
 }
+
+exports.getDetails = getDetails;
