@@ -1,7 +1,9 @@
 'use strict';
 
+const fetch = require('node-fetch');
+
 function getDetails(sensorid, purpleAirApiReadKey) {
-    let customHeader = new Headers();
+    let customHeader = new fetch.Headers();
     customHeader.append('X-API-Key', purpleAirApiReadKey);
     let initObject = {
         method: 'GET', headers: customHeader,
