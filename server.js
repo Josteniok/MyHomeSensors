@@ -17,7 +17,8 @@ app.get('/', (req, res) => {
   // res.send('Hello, world')
   // res.send(purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey))
   purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey);
-  res.send('Hello, world');
+  res.json({ username: 'Flavio' });
+  // res.send('Hello, world');
 })
 
 const port = process.env.PORT || 3000;
