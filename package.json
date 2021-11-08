@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Josteniok/MyPurpleAirSensors#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "node-fetch": "^2.0.0"
+    "node-fetch": "^2.0.0",
+    "pg": "^8.7.1"
   }
 }
