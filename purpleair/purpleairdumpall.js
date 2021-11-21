@@ -12,7 +12,7 @@ function getDetails(sensorid, purpleAirApiReadKey) {
     .then(response => response.json())
     .then(function (data) {
         // console.log(JSON.stringify(data, null, 2));
-        return JSON.stringify(data, null, 2);
+        return data;
     })
     .catch(function (err) {
         console.log("ERROR: ", err);
