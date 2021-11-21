@@ -16,11 +16,12 @@ const sensorgroupid = process.env.SENSOR_GROUP_ID || "";
 app.get('/', (req, res) => {
   // purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey);
   // res.json({ username: 'Flavio' });
-  const testdata = await purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey);
-  console.log("About to print the data");
-  console.log("The data is %s.", testdata);
-  console.log("Try to output the JSON");
-  res.json(testdata);
+  purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey).then(response => {
+    console.log("About to print the data");
+    console.log("The data is %s.", response);
+    console.log("Try to output the JSON");
+    res.json(response);
+  });
   // res.send('Hello, world');
 })
 
