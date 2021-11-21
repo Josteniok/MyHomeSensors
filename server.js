@@ -17,7 +17,8 @@ app.get('/', (req, res) => {
   // res.send('Hello, world')
   // res.send(purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey))
   purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey);
-  res.json({ username: 'Flavio' });
+  // res.json({ username: 'Flavio' });
+  res.json(purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey));
   // res.send('Hello, world');
 })
 
