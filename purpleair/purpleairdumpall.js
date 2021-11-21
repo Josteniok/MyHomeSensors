@@ -2,21 +2,16 @@
 
 const fetch = require('node-fetch');
 
-function getDetails(sensorid, purpleAirApiReadKey) {
+async function getDetails(sensorid, purpleAirApiReadKey) {
     let customHeader = new fetch.Headers();
     customHeader.append('X-API-Key', purpleAirApiReadKey);
     let initObject = {
         method: 'GET', headers: customHeader,
     };
-    fetch("https://api.purpleair.com/v1/sensors/"+sensorid, initObject)
-    .then(response => response.json())
-    .then(function (data) {
-        // console.log(JSON.stringify(data, null, 2));
-        return JSON.stringify(data);
-    })
-    .catch(function (err) {
-        console.log("ERROR: ", err);
-    });
+    const response = await fetch("https://api.purpleair.com/v1/sensors/"+sensorid, initObject, {});
+    const json = await response.json();
+
+    return json;
 }
 
 exports.getDetails = getDetails;
