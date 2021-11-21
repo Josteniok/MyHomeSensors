@@ -14,10 +14,9 @@ const sensorgroupid = process.env.SENSOR_GROUP_ID || "";
 
 // Declare a route
 app.get('/', (req, res) => {
-  // res.send('Hello, world')
-  // res.send(purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey))
-  purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey);
+  // purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey);
   // res.json({ username: 'Flavio' });
+  testdata = purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey);
   res.json(purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey));
   // res.send('Hello, world');
 })
