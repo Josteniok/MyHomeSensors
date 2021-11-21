@@ -16,8 +16,8 @@ const sensorgroupid = process.env.SENSOR_GROUP_ID || "";
 app.get('/', (req, res) => {
   // purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey);
   // res.json({ username: 'Flavio' });
-  const testdata = JSON.parse(purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey));
-  res.json(purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey));
+  const testdata = purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey);
+  res.json(testdata);
   // res.send('Hello, world');
 })
 
