@@ -25,7 +25,7 @@ let currenttime = Date.now();
 // const timevalue = to_timestamp(currenttime.toString(), 'DD Mon YYYY');
 
 // Test writing a timestamp periodically to the test table
-pool.query('INSERT INTO TestTable(TimeStamp) VALUES($1)', [currenttime], (err, res) => {
+pool.query('INSERT INTO TestTable(datetime) VALUES($1)', [currenttime], (err, res) => {
   if (err) {
       console.log("Error - Failed to insert data into TestTable");
       console.log(err);
