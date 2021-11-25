@@ -21,7 +21,7 @@ const pool = new Pool({
  }
 });
 
-let currenttime = Date.now() / 1000;
+let currenttime = Date.now() / 1000.0;
 // const timevalue = to_timestamp(currenttime.toString(), 'DD Mon YYYY');
 
 // Test writing a timestamp periodically to the test table
