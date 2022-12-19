@@ -33,10 +33,9 @@ pool.query(`INSERT INTO TestTable(datetime) VALUES(to_timestamp(${currenttime}))
 
 // Declare a route
 app.get('/', (req, res) => {
-  res.send("<h1>Hello, world</h1>");
-  /*purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey).then(response => {
-    res.json(response);
-  });*/
+  purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey).then(response => {
+    res.send("<pre>"+JSON.stringify(response, null, 2) +"</pre>");
+  });
 });
 
 const port = process.env.PORT || 8080;
