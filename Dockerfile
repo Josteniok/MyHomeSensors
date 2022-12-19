@@ -1,20 +1,36 @@
-FROM node:18
+FROM debian:bullseye as builder
 
-# Create app directory
-WORKDIR /usr/src/app
+ARG NODE_VERSION=19.3.0
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
+RUN apt-get update; apt install -y curl
+RUN curl https://get.volta.sh | bash
+ENV VOLTA_HOME /root/.volta
+ENV PATH /root/.volta/bin:$PATH
+RUN volta install node@${NODE_VERSION}
 
-RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
+#######################################################################
 
-# Bundle app source
+RUN mkdir /app
+WORKDIR /app
+
+# NPM will not install any package listed in "devDependencies" when NODE_ENV is set to "production",
+# to install all modules: "npm install --production=false".
+# Ref: https://docs.npmjs.com/cli/v9/commands/npm-install#description
+
+ENV NODE_ENV production
+
 COPY . .
 
-EXPOSE 8080
+RUN npm install
+FROM debian:bullseye
 
-CMD [ "node", "server.js" ]
+LABEL fly_launch_runtime="nodejs"
+
+COPY --from=builder /root/.volta /root/.volta
+COPY --from=builder /app /app
+
+WORKDIR /app
+ENV NODE_ENV production
+ENV PATH /root/.volta/bin:$PATH
+
+CMD [ "npm", "run", "start" ]
