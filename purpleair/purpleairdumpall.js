@@ -1,5 +1,8 @@
 'use strict';
 
+
+exports.getDetails = getDetails;
+
 const fetch = require('node-fetch');
 
 async function getDetails(sensorid, purpleAirApiReadKey) {
@@ -13,5 +16,3 @@ async function getDetails(sensorid, purpleAirApiReadKey) {
 
     return json;
 }
-
-exports.getDetails = getDetails;

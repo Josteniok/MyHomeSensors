@@ -5,6 +5,7 @@ const express = require('express');
 const app = express();
 
 const purpleairdump = require('./purpleair/purpleairdumpall');
+const ambientweather = require('./ambientweather/ambientweather')
 
 // PurpleAir API settings
 const purpleAirApiReadKey = process.env.API_READ_KEY || "";
@@ -34,7 +35,13 @@ pool.query(`INSERT INTO TestTable(datetime) VALUES(to_timestamp(${currenttime}))
 // Declare a route
 app.get('/', (req, res) => {
   purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey).then(response => {
-    res.send("<pre>"+JSON.stringify(response, null, 2) +"</pre>");
+    res.send("<pre>"+JSON.stringify(response, null, 2)+"</pre>");
+  });
+});
+
+app.get('/ambientweather', (req, res) => {
+  ambientweather.getInfo().then(response => {
+    res.send("<pre>"+JSON.stringify(response, null, 2)+"</pre>");
   });
 });
 
