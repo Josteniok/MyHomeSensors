@@ -1,21 +1,21 @@
 {
-  "name": "mypurpleairsensors",
+  "name": "myhomesensors",
   "version": "0.0.1",
-  "description": "JavaScript project to read from PurpleAir sensors and store the data in a database.",
+  "description": "JavaScript project to read from the various sensors at a house and output various interesting information from them.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/Josteniok/MyPurpleAirSensors.git"
+    "url": "git+ssh://git@github.com/Josteniok/MyHomeSensors.git"
   },
   "author": "Justin Ennis",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Josteniok/MyPurpleAirSensors/issues"
+    "url": "https://github.com/Josteniok/MyHomeSensors/issues"
   },
-  "homepage": "https://github.com/Josteniok/MyPurpleAirSensors#readme",
+  "homepage": "https://github.com/Josteniok/MyHomeSensors#readme",
   "dependencies": {
     "ambient-weather-api": "^0.0.6",
     "express": "^4.17.1",
