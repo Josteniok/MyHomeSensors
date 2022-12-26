@@ -4,6 +4,7 @@ const purpleAirApiReadKey = process.env.API_READ_KEY || "";
 const outdoorsensorindex = process.env.OUTDOOR_SENSOR_INDEX || "";
 const indoorsensorindex = process.env.INDOOR_SENSOR_INDEX || "";
 const sensorgroupid = process.env.SENSOR_GROUP_ID || "";
+
 // Fields object
 const Fields = {
     pm1: 'pm1.0',
@@ -31,8 +32,10 @@ const Fields = {
     um10: '10.0_um_count',
     um10index: 12
 };
+
 // Initial pull
 getAqi(sensorgroupid);
+
 // Repeat pulls
 let indoorAQI = setInterval(getAqi, 120000, sensorgroupid);
 
