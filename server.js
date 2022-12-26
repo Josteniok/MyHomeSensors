@@ -5,6 +5,7 @@ const express = require('express');
 const app = express();
 
 const purpleairdump = require('./purpleair/purpleairdumpall');
+//const purpleair = require('./purpleair/purpleairaccess');
 const ambientweather = require('./ambientweather/ambientweather')
 
 // Set up EJS as the view engine
@@ -32,11 +33,14 @@ pool.query(`INSERT INTO TestTable(datetime) VALUES(to_timestamp(${currenttime}))
 // This sets the public directory to be used for things like CSS files
 app.use(express.static('public'));
 
-// Declare a route
 app.get('/', (req, res) => {
   purpleairdump.getDetails().then(response => {
     res.send("<pre>"+JSON.stringify(response, null, 2)+"</pre>");
   });
+});
+
+app.get('/purpleair', (req, res) => {
+  res.render('pages/index');
 });
 
 app.get('/ambientweather', (req, res) => {
