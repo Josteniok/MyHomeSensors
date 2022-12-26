@@ -7,11 +7,8 @@ const app = express();
 const purpleairdump = require('./purpleair/purpleairdumpall');
 const ambientweather = require('./ambientweather/ambientweather')
 
-// PurpleAir API settings
-const purpleAirApiReadKey = process.env.API_READ_KEY || "";
-const outdoorsensorindex = process.env.OUTDOOR_SENSOR_ID || "";
-const indoorsensorindex = process.env.INDOOR_SENSOR_INDEX || "";
-const sensorgroupid = process.env.SENSOR_GROUP_ID || "";
+// Set up EJS as the view engine
+app.set('view engine', 'ejs');
 
 // Create a new pool for the database connection
 /*const {Pool} = require('pg');
@@ -37,7 +34,7 @@ app.use(express.static('public'));
 
 // Declare a route
 app.get('/', (req, res) => {
-  purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey).then(response => {
+  purpleairdump.getDetails().then(response => {
     res.send("<pre>"+JSON.stringify(response, null, 2)+"</pre>");
   });
 });
