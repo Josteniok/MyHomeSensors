@@ -32,6 +32,9 @@ pool.query(`INSERT INTO TestTable(datetime) VALUES(to_timestamp(${currenttime}))
   }
 });*/
 
+// This sets the public directory to be used for things like CSS files
+app.use(express.static('public'));
+
 // Declare a route
 app.get('/', (req, res) => {
   purpleairdump.getDetails(indoorsensorindex, purpleAirApiReadKey).then(response => {
