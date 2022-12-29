@@ -1,5 +1,7 @@
 'use strict';
 
+exports.getPurpleAirData = getPurpleAirData;
+
 const purpleAirApiReadKey = process.env.API_READ_KEY || "";
 const outdoorsensorindex = process.env.OUTDOOR_SENSOR_INDEX || "";
 const indoorsensorindex = process.env.INDOOR_SENSOR_INDEX || "";
@@ -8,38 +10,67 @@ const sensorgroupid = process.env.SENSOR_GROUP_ID || "";
 // Fields object
 const Fields = {
     pm1: 'pm1.0',
-    pm1index: 1,
     pm25: 'pm2.5',
-    pm25index: 2,
     pm10: 'pm10.0',
-    pm10index: 3,
     pm25cf: 'pm2.5_cf_1',
-    pm25cfindex: 4,
     humidity: 'humidity',
-    humidityindex: 5,
     lastseen: 'last_seen',
-    lastseenindex: 6,
     um03: '0.3_um_count',
-    um03index: 7,
     um05: '0.5_um_count',
-    um05index: 8,
     um1: '1.0_um_count',
-    um1index: 9,
     um25: '2.5_um_count',
-    um25index: 10,
     um5: '5.0_um_count',
-    um5index: 11,
-    um10: '10.0_um_count',
-    um10index: 12
+    um10: '10.0_um_count'
 };
 
+let PurpleAirData = {
+    indoor: {
+        pm1: 0.0,
+        pm25: 0.0,
+        pm10: 0.0,
+        pm25cf: 0.0,
+        humidity: 0.0,
+        lastseen: 0.0,
+        um03: 0.0,
+        um05: 0.0,
+        um1: 0.0,
+        um25: 0.0,
+        um5: 0.0,
+        um10: 0.0,
+        correctedpm25: 0.0,
+        aqi: 0.0,
+        bgcolor: 'green'
+    },
+    outdoor: {
+        pm1: 0.0,
+        pm25: 0.0,
+        pm10: 0.0,
+        pm25cf: 0.0,
+        humidity: 0.0,
+        lastseen: 0.0,
+        um03: 0.0,
+        um05: 0.0,
+        um1: 0.0,
+        um25: 0.0,
+        um5: 0.0,
+        um10: 0.0,
+        correctedpm25: 0.0,
+        aqi: 0.0,
+        bgcolor: 'green'
+    }
+};
+
+async function getPurpleAirData() {
+    return getAqi(sensorgroupid);
+}
+
 // Initial pull
-getAqi(sensorgroupid);
+// getAqi(sensorgroupid);
 
 // Repeat pulls
-let indoorAQI = setInterval(getAqi, 120000, sensorgroupid);
+// let indoorAQI = setInterval(getAqi, 120000, sensorgroupid);
 
-function getAqi(groupid) {
+async function getAqi(groupid) {
     let customHeader = new Headers();
     customHeader.append('X-API-Key', purpleAirApiReadKey);
     let initObject = {
@@ -60,64 +91,57 @@ function getAqi(groupid) {
         + ',' + Fields.um5
         + ',' + Fields.um10;
 
-    fetch("https://api.purpleair.com/v1/groups/"+groupid+"/members?fields="+sensorfields, initObject)
-    .then(response => response.json())
-    .then(function (sensorData) {
-        sensorData.data.forEach((sensor) => {
-            if (sensor[0] == indoorsensorindex) {
-                injectSensorData("indoor", sensor);
-            } else if (sensor[0] == outdoorsensorindex) {
-                injectSensorData("outdoor", sensor);
-            }
-        })
-    })
-    .catch(function (err) {
-        console.log("ERROR: ", err);
+    let purpleairfetch = await fetch(
+        "https://api.purpleair.com/v1/groups/"+groupid+"/members?fields="+sensorfields, initObject, {});
+    let purpleairjson = await purpleairfetch.json();
+    let sensorDataFields = purpleairjson.fields;
+    purpleairjson.data.forEach((sensor) => {
+        if (sensor[0] == indoorsensorindex) {
+            saveSensorData("indoor", sensor, sensorDataFields);
+        } else if (sensor[0] == outdoorsensorindex) {
+            saveSensorData("outdoor", sensor, sensorDataFields);
+        }
     });
+
+    return PurpleAirData;
 }
 
-function injectSensorData(location, sensorData) {
-    const pm1data = sensorData[Fields.pm1index];
-    const pm25data = sensorData[Fields.pm25index];
-    const pm10data = sensorData[Fields.pm10index];
-    const pm25_cf_1data = sensorData[Fields.pm25cfindex];
-    const humiditydata = sensorData[Fields.humidityindex];
-    const lastseendata = sensorData[Fields.lastseenindex];
-    const um03data = sensorData[Fields.um03index];
-    const um05data = sensorData[Fields.um05index];
-    const um1data = sensorData[Fields.um1index];
-    const um25data = sensorData[Fields.um25index];
-    const um5data = sensorData[Fields.um5index];
-    const um10data = sensorData[Fields.um10index];
+function saveSensorDataTesting(sensorData) {
+    for (let field in sensorData.fields) {
+        console.log('First field: ' + field + ' is ' + sensorData.fields[field]);
+    }
+}
 
-    // DOM locations
-    const docid = location + "aqi";
-    const gridid = location + "-column";
-    const pm1id = location + "pm1.0";
-    const pm25id = location + "pm2.5";
-    const pm10id = location + "pm10.0";
-    const datatimeid = location + "datatime";
-    const um03id = location + "0.3um";
-    const um05id = location + "0.5um";
-    const um1id = location + "1.0um";
-    const um25id = location + "2.5um";
-    const um5id = location + "5.0um";
-    const um10id = location + "10.0um";
+function saveSensorData(location, sensorData, sensorDataFields) {
+    const pm1data = sensorData[sensorDataFields.indexOf(Fields.pm1)];
+    const pm25data = sensorData[sensorDataFields.indexOf(Fields.pm25)];
+    const pm10data = sensorData[sensorDataFields.indexOf(Fields.pm10)];
+    const pm25_cf_1data = sensorData[sensorDataFields.indexOf(Fields.pm25cf)];
+    const humiditydata = sensorData[sensorDataFields.indexOf(Fields.humidity)];
+    const lastseendata = sensorData[sensorDataFields.indexOf(Fields.lastseen)];
+    const um03data = sensorData[sensorDataFields.indexOf(Fields.um03)];
+    const um05data = sensorData[sensorDataFields.indexOf(Fields.um05)];
+    const um1data = sensorData[sensorDataFields.indexOf(Fields.um1)];
+    const um25data = sensorData[sensorDataFields.indexOf(Fields.um25)];
+    const um5data = sensorData[sensorDataFields.indexOf(Fields.um5)];
+    const um10data = sensorData[sensorDataFields.indexOf(Fields.um10)];
 
-    const correctedpm25 = correctPM25(pm25_cf_1data, humiditydata);
-    const aqi = calcAQI(correctedpm25);
-    document.getElementById(docid).innerHTML = String(aqi.toFixed(0));
-    document.getElementById(gridid).style.backgroundColor = getBGColorForAQI(aqi);
-    document.getElementById(pm1id).innerHTML = String(pm1data);
-    document.getElementById(pm25id).innerHTML = String(pm25data);
-    document.getElementById(pm10id).innerHTML = String(pm10data);
-    document.getElementById(datatimeid).innerHTML = formattedTime(lastseendata);
-    document.getElementById(um03id).innerHTML = String(um03data);
-    document.getElementById(um05id).innerHTML = String(um05data);
-    document.getElementById(um1id).innerHTML = String(um1data);
-    document.getElementById(um25id).innerHTML = String(um25data);
-    document.getElementById(um5id).innerHTML = String(um5data);
-    document.getElementById(um10id).innerHTML = String(um10data);
+    PurpleAirData[location].pm1 = pm1data;
+    PurpleAirData[location].pm25 = pm25data;
+    PurpleAirData[location].pm10 = pm10data;
+    PurpleAirData[location].pm25cf = pm25_cf_1data;
+    PurpleAirData[location].humidity = humiditydata;
+    PurpleAirData[location].lastseen = lastseendata;
+    PurpleAirData[location].um03 = um03data;
+    PurpleAirData[location].um05 = um05data;
+    PurpleAirData[location].um1 = um1data;
+    PurpleAirData[location].um25 = um25data;
+    PurpleAirData[location].um5 = um5data;
+    PurpleAirData[location].um10 = um10data;
+
+    PurpleAirData[location].correctedpm25 = correctPM25(pm25_cf_1data, humiditydata);
+    PurpleAirData[location].aqi = calcAQI(PurpleAirData[location].correctedpm25);
+    PurpleAirData[location].bgcolor = getBGColorForAQI(PurpleAirData[location].aqi);
 }
 
 function correctPM25(pm25cf, humidity) {

@@ -5,7 +5,7 @@ const express = require('express');
 const app = express();
 
 const purpleairdump = require('./purpleair/purpleairdumpall');
-//const purpleair = require('./purpleair/purpleairaccess');
+const purpleair = require('./purpleair/purpleair');
 const ambientweather = require('./ambientweather/ambientweather')
 
 // Set up EJS as the view engine
@@ -40,7 +40,16 @@ app.get('/', (req, res) => {
 });
 
 app.get('/purpleair', (req, res) => {
-  res.render('pages/index');
+  purpleair.getPurpleAirData().then(response => {
+    res.send("<pre>"+JSON.stringify(response, null, 2)+"</pre>");
+  });
+  //res.render('pages/index');
+});
+
+app.get('/purpleairdumpall', (req, res) => {
+  purpleairdump.getDetails().then(response => {
+    res.send("<pre>"+JSON.stringify(response, null, 2)+"</pre>");
+  });
 });
 
 app.get('/ambientweather', (req, res) => {
