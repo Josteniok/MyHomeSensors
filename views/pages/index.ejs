@@ -5,13 +5,13 @@
       </head>
       <body>
           <div class = "grid-container">
-              <div class = "grid-item" id = "indoor-column">
+              <div class = "grid-item" style = "background-color:<%= purpleairdata.indoor.bgcolor %>">
                   <p style = "font-size:3vw">Indoor AQI</p>
-                  <p id = "indooraqi"></p>
+                  <p><%= purpleairdata.indoor.aqi %></p>
               </div>
-              <div class = "grid-item" id = "outdoor-column">
+              <div class = "grid-item" style = "background-color:<%= purpleairdata.indoor.bgcolor %>">
                   <p style = "font-size:3vw">Outdoor AQI</p>
-                  <p id = "outdooraqi"></p>
+                  <p><%= purpleairdata.outdoor.aqi %></p>
               </div>
               <div class = "grid-item">
                 <p style = "font-size:3vw">Indoor Details</p>
@@ -27,9 +27,9 @@
                         <th>pm10.0</th>
                     </tr>
                     <tr>
-                        <td id = "indoorpm1.0"></td>
-                        <td id = "indoorpm2.5"></td>
-                        <td id = "indoorpm10.0"></td>
+                        <td><%= purpleairdata.indoor.pm1 %></td>
+                        <td><%= purpleairdata.indoor.pm25 %></td>
+                        <td><%= purpleairdata.indoor.pm10 %></td>
                     </tr>
                 </table>
                 <table>
@@ -47,15 +47,15 @@
                         <th>10.0um</th>
                     </tr>
                     <tr>
-                        <td id = "indoor0.3um"></td>
-                        <td id = "indoor0.5um"></td>
-                        <td id = "indoor1.0um"></td>
-                        <td id = "indoor2.5um"></td>
-                        <td id = "indoor5.0um"></td>
-                        <td id = "indoor10.0um"></td>
+                        <td><%= purpleairdata.indoor.um03 %></td>
+                        <td><%= purpleairdata.indoor.um05 %></td>
+                        <td><%= purpleairdata.indoor.um1 %></td>
+                        <td><%= purpleairdata.indoor.um25 %></td>
+                        <td><%= purpleairdata.indoor.um5 %></td>
+                        <td><%= purpleairdata.indoor.um10 %></td>
                     </tr>
                 </table>
-                <p style = "font-size:2vw" id = "indoordatatime"></pr>
+                <p style = "font-size:2vw"><%= purpleairdata.indoor.lastseen %></pr>
               </div>
               <div class = "grid-item">
                 <p style = "font-size:3vw">Outdoor Details</p>
@@ -71,9 +71,9 @@
                         <th>pm10.0</th>
                     </tr>
                     <tr>
-                        <td id = "outdoorpm1.0"></td>
-                        <td id = "outdoorpm2.5"></td>
-                        <td id = "outdoorpm10.0"></td>
+                        <td><%= purpleairdata.outdoor.pm1 %></td>
+                        <td><%= purpleairdata.outdoor.pm25 %></td>
+                        <td><%= purpleairdata.outdoor.pm10 %></td>
                     </tr>
                 </table>
                 <table>
@@ -91,15 +91,15 @@
                         <th>10.0um</th>
                     </tr>
                     <tr>
-                        <td id = "outdoor0.3um"></td>
-                        <td id = "outdoor0.5um"></td>
-                        <td id = "outdoor1.0um"></td>
-                        <td id = "outdoor2.5um"></td>
-                        <td id = "outdoor5.0um"></td>
-                        <td id = "outdoor10.0um"></td>
+                        <td><%= purpleairdata.outdoor.um03 %></td>
+                        <td><%= purpleairdata.outdoor.um05 %></td>
+                        <td><%= purpleairdata.outdoor.um1 %></td>
+                        <td><%= purpleairdata.outdoor.um25 %></td>
+                        <td><%= purpleairdata.outdoor.um5 %></td>
+                        <td><%= purpleairdata.outdoor.um10 %></td>
                     </tr>
                 </table>
-                <p style = "font-size:2vw" id = "outdoordatatime"></pr>
+                <p style = "font-size:2vw"><%= purpleairdata.outdoor.lastseen %></pr>
               </div>
           </div>
           <!-- script src="/purpleair/purpleairaccess.js" -->

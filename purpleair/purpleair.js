@@ -131,7 +131,7 @@ function saveSensorData(location, sensorData, sensorDataFields) {
     PurpleAirData[location].pm10 = pm10data;
     PurpleAirData[location].pm25cf = pm25_cf_1data;
     PurpleAirData[location].humidity = humiditydata;
-    PurpleAirData[location].lastseen = lastseendata;
+    PurpleAirData[location].lastseen = formattedTime(lastseendata);
     PurpleAirData[location].um03 = um03data;
     PurpleAirData[location].um05 = um05data;
     PurpleAirData[location].um1 = um1data;
@@ -140,7 +140,7 @@ function saveSensorData(location, sensorData, sensorDataFields) {
     PurpleAirData[location].um10 = um10data;
 
     PurpleAirData[location].correctedpm25 = correctPM25(pm25_cf_1data, humiditydata);
-    PurpleAirData[location].aqi = calcAQI(PurpleAirData[location].correctedpm25);
+    PurpleAirData[location].aqi = calcAQI(PurpleAirData[location].correctedpm25).toFixed(0);
     PurpleAirData[location].bgcolor = getBGColorForAQI(PurpleAirData[location].aqi);
 }
 

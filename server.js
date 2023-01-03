@@ -30,8 +30,10 @@ pool.query(`INSERT INTO TestTable(datetime) VALUES(to_timestamp(${currenttime}))
   }
 });*/
 
-// This sets the public directory to be used for things like CSS files
-app.use(express.static('public'));
+// This sets the public directory to be used for things like CSS files.
+// Note that it also means the index.html file from this directory will be used
+// for the root of the web site if it exists.
+// app.use(express.static('public'));
 
 app.get('/', (req, res) => {
   purpleairdump.getDetails().then(response => {
@@ -41,9 +43,11 @@ app.get('/', (req, res) => {
 
 app.get('/purpleair', (req, res) => {
   purpleair.getPurpleAirData().then(response => {
-    res.send("<pre>"+JSON.stringify(response, null, 2)+"</pre>");
+    res.render('pages/index', {
+      purpleairdata: response
+    });
   });
-  //res.render('pages/index');
+  
 });
 
 app.get('/purpleairdumpall', (req, res) => {
@@ -61,5 +65,5 @@ app.get('/ambientweather', (req, res) => {
 const port = process.env.PORT || 8080;
 
 app.listen(port, () => {
-  console.log(`Mypurpleairsensors app listening on port ${port}`);
+  console.log(`MyHomeSensors app listening on port ${port}`);
 });
