@@ -55,7 +55,7 @@
                         <td><%= purpleairdata.indoor.um10 %></td>
                     </tr>
                 </table>
-                <p style = "font-size:2vw"><%= purpleairdata.indoor.lastseen %></pr>
+                <p style = "font-size:2vw" id = "indoorlastseen"></pr>
               </div>
               <div class = "grid-item">
                 <p style = "font-size:3vw">Outdoor Details</p>
@@ -99,10 +99,22 @@
                         <td><%= purpleairdata.outdoor.um10 %></td>
                     </tr>
                 </table>
-                <p style = "font-size:2vw"><%= purpleairdata.outdoor.lastseen %></pr>
+                <p style = "font-size:2vw" id = "outdoorlastseen"></pr>
               </div>
           </div>
-          <!-- script src="/purpleair/purpleairaccess.js" -->
-          </script>
+          <script type = "text/javascript">
+            let purpleAirOutdoorTime = new Date(Number('<%- purpleairdata.outdoor.lastseen %>'));
+            let purpleAirIndoorTime = new Date(Number('<%- purpleairdata.indoor.lastseen %>'))
+            if (purpleAirOutdoorTime) {
+                document.getElementById("outdoorlastseen").innerHTML = purpleAirOutdoorTime.toLocaleString();
+            } else {
+                document.getElementById("outdoorlastseen").innerHTML = "Outdoor Time Not Found";
+            }
+            if (purpleAirIndoorTime) {
+                document.getElementById("indoorlastseen").innerHTML = purpleAirIndoorTime.toLocaleString();
+            } else {
+                document.getElementById("indoorlastseen").innerHTML = "Indoor Time Not Found";
+            }
+        </script>
         </body>
     </html>

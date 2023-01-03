@@ -131,7 +131,7 @@ function saveSensorData(location, sensorData, sensorDataFields) {
     PurpleAirData[location].pm10 = pm10data;
     PurpleAirData[location].pm25cf = pm25_cf_1data;
     PurpleAirData[location].humidity = humiditydata;
-    PurpleAirData[location].lastseen = formattedTime(lastseendata);
+    PurpleAirData[location].lastseen = convertToMilliseconds(lastseendata);
     PurpleAirData[location].um03 = um03data;
     PurpleAirData[location].um05 = um05data;
     PurpleAirData[location].um1 = um1data;
@@ -148,10 +148,9 @@ function correctPM25(pm25cf, humidity) {
     return ((0.52 * pm25cf) - (0.085 * humidity) + 5.71);
 }
 
-function formattedTime(unixtime) {
+function convertToMilliseconds(unixtime) {
     const milliseconds = unixtime * 1000;
-    const dateObject = new Date(milliseconds);
-    return dateObject.toLocaleString();
+    return milliseconds;
 }
 
 function calcAQI(pm25) {
