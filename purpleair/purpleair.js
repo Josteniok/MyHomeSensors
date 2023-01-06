@@ -109,8 +109,6 @@ function getPurpleAirReading(groupid) {
             + ' VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?),(?,?,?,?,?,?,?,?,?,?,?,?,?)');
         let runinfo = purpleairinsertsqlstatement.run(purpleairinsertvalues);
 
-        console.log('Inserted ' + runinfo.changes + ' rows into the database.');
-
         purpleairdb.close();
     });
 }
@@ -133,9 +131,6 @@ async function getPurpleAirDataFromDB() {
 
     return PurpleAirData;
 }
-
-// Initial pull
-// getAqi(sensorgroupid);
 
 // Repeat pulls
 // let indoorAQI = setInterval(getAqi, 120000, sensorgroupid);
@@ -176,12 +171,6 @@ async function getAqi(groupid) {
     return PurpleAirData;
 }
 
-function saveSensorDataTesting(sensorData) {
-    for (let field in sensorData.fields) {
-        console.log('First field: ' + field + ' is ' + sensorData.fields[field]);
-    }
-}
-
 function saveSensorDataFromDB(dbRow) {
     let location = dbRow.location;
     PurpleAirData[location].pm1 = dbRow.pm_1;
@@ -189,7 +178,7 @@ function saveSensorDataFromDB(dbRow) {
     PurpleAirData[location].pm10 = dbRow.pm_10;
     PurpleAirData[location].pm25cf = dbRow.pm_25_cf;
     PurpleAirData[location].humidity = dbRow.humidity;
-    PurpleAirData[location].lastseen = convertToMilliseconds(dbRow.lastseendata);
+    PurpleAirData[location].lastseen = dbRow.lastseen;
     PurpleAirData[location].um03 = dbRow.um_03;
     PurpleAirData[location].um05 = dbRow.um_05;
     PurpleAirData[location].um1 = dbRow.um_1;
