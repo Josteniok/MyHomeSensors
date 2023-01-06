@@ -67,8 +67,8 @@ let PurpleAirData = {
 };
 
 function startPurpleAirRetrieval() {
-    // let purpleAirRetriever = setInterval(getPurpleAirReading, 120000, sensorgroupid);
     getPurpleAirReading();
+    let purpleAirRetriever = setInterval(getPurpleAirReading, 120000, sensorgroupid);
 }
 
 function getPurpleAirReading(groupid) {
@@ -121,11 +121,17 @@ async function getPurpleAirDataFromDB() {
     let purpleairdb = new sqlite3DB('./db/homesensors.db', { verbose: console.log });
     purpleairdb.pragma('journal_mode = WAL');
 
-    let purpleairsqlquerystatement = purpleairdb.prepare('SELECT * FROM ' + purpleAirTableName);
-    let rows = purpleairsqlquerystatement.all()
-    rows.forEach((row) => {
-        saveSensorDataFromDB(row);
-    })
+    let latestreadingstatement = purpleairdb.prepare(
+        'SELECT * FROM ' + purpleAirTableName 
+        + ' WHERE lastseen = (SELECT MAX(lastseen) FROM ' + purpleAirTableName
+        + ' WHERE location = ?)'
+    );
+
+    let latestindoorreadingrow = latestreadingstatement.get('indoor');
+    let latestoutdoorreadingrow = latestreadingstatement.get('outdoor');
+
+    saveSensorDataFromDB(latestindoorreadingrow);
+    saveSensorDataFromDB(latestoutdoorreadingrow);
 
     purpleairdb.close();
 
