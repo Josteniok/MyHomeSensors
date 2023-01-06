@@ -8,6 +8,9 @@ const purpleairdump = require('./purpleair/purpleairdumpall');
 const purpleair = require('./purpleair/purpleair');
 const ambientweather = require('./ambientweather/ambientweather')
 
+// Start the retrieval functions to store the sensor readings
+purpleair.startPurpleAirRetrieval();
+
 // Set up EJS as the view engine
 app.set('view engine', 'ejs');
 
@@ -42,18 +45,19 @@ app.get('/', (req, res) => {
 });
 
 app.get('/purpleair', (req, res) => {
-  purpleair.getPurpleAirData().then(response => {
+  purpleair.getPurpleAirDataFromDB().then(response => {
     res.render('pages/index', {
       purpleairdata: response
     });
   });
-  
 });
 
 app.get('/purpleairdumpall', (req, res) => {
-  purpleairdump.getDetails().then(response => {
+  /*purpleairdump.getDetails().then(response => {
     res.send("<pre>"+JSON.stringify(response, null, 2)+"</pre>");
-  });
+  });*/
+  /*let purpleairDBdata = purpleair.getPurpleAirDataFromDB();
+  res.send("<pre>"+JSON.stringify(purpleairDBdata, null, 2)+"</pre>")*/
 });
 
 app.get('/ambientweather', (req, res) => {

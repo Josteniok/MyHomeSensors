@@ -1,11 +1,17 @@
 'use strict';
 
 exports.getPurpleAirData = getPurpleAirData;
+exports.startPurpleAirRetrieval = startPurpleAirRetrieval;
+exports.getPurpleAirDataFromDB = getPurpleAirDataFromDB;
+
+const sqlite3 = require('sqlite3').verbose();
 
 const purpleAirApiReadKey = process.env.API_READ_KEY || "";
 const outdoorsensorindex = process.env.OUTDOOR_SENSOR_INDEX || "";
 const indoorsensorindex = process.env.INDOOR_SENSOR_INDEX || "";
 const sensorgroupid = process.env.SENSOR_GROUP_ID || "";
+
+const purpleAirTableName = 'purpleair';
 
 // Fields object
 const Fields = {
@@ -60,8 +66,87 @@ let PurpleAirData = {
     }
 };
 
+function startPurpleAirRetrieval() {
+    // let purpleAirRetriever = setInterval(getPurpleAirReading, 120000, sensorgroupid);
+    getPurpleAirReading();
+}
+
+function getPurpleAirReading(groupid) {
+    getPurpleAirData().then(response => {
+        let purpleairinsertvalues = [
+            'indoor',
+            response.indoor.pm1,
+            response.indoor.pm25,
+            response.indoor.pm10,
+            response.indoor.pm25cf,
+            response.indoor.humidity,
+            response.indoor.lastseen,
+            response.indoor.um03,
+            response.indoor.um05,
+            response.indoor.um1,
+            response.indoor.um25,
+            response.indoor.um5,
+            response.indoor.um10,
+            'outdoor',
+            response.outdoor.pm1,
+            response.outdoor.pm25,
+            response.outdoor.pm10,
+            response.outdoor.pm25cf,
+            response.outdoor.humidity,
+            response.outdoor.lastseen,
+            response.outdoor.um03,
+            response.outdoor.um05,
+            response.outdoor.um1,
+            response.outdoor.um25,
+            response.outdoor.um5,
+            response.outdoor.um10
+        ];
+        let purpleairdb = new sqlite3.Database('./db/homesensors.db', (err) => {
+            if (err) {
+              return console.log(err.message);
+            }
+            console.log('Connected to the home sensors database.');
+        });
+        let purpleairinsertsql = 'INSERT INTO ' 
+            + purpleAirTableName
+            + ' (location,pm_1,pm_25,pm_10,pm_25_cf,humidity,lastseen,um_03,um_05,um_1,um_25,um_5,um_10) '
+            + ' VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?),(?,?,?,?,?,?,?,?,?,?,?,?,?)';
+        purpleairdb.run(purpleairinsertsql, purpleairinsertvalues, function(err) {
+            if (err) {
+                return console.log(err.message);
+            }
+            console.log('PurpleAir readings were inserted into the the database');
+        });
+        purpleairdb.close();
+    });
+}
+
 async function getPurpleAirData() {
     return getAqi(sensorgroupid);
+}
+
+async function getPurpleAirDataFromDB() {
+    let purpleairdb = new sqlite3.Database('./db/homesensors.db', (err) => {
+        if (err) {
+            return console.log(err.message);
+        }
+        console.log('Connected to the home sensors database for reading latest values');
+    });
+
+    let purpleairsqlquery = 'SELECT * FROM ' + purpleAirTableName;
+
+    purpleairdb.all(purpleairsqlquery, [], (err, rows) => {
+        if (err) {
+            console.log(err.message);
+        }
+        rows.forEach((row) => {
+            saveSensorDataFromDB(row);
+        })
+    });
+
+    purpleairdb.close();
+
+    return PurpleAirData;
 }
 
 // Initial pull
@@ -112,6 +197,27 @@ function saveSensorDataTesting(sensorData) {
     }
 }
 
+function saveSensorDataFromDB(dbRow) {
+    let location = dbRow.location;
+    PurpleAirData[location].pm1 = dbRow.pm_1;
+    PurpleAirData[location].pm25 = dbRow.pm_25;
+    PurpleAirData[location].pm10 = dbRow.pm_10;
+    PurpleAirData[location].pm25cf = dbRow.pm_25_cf;
+    PurpleAirData[location].humidity = dbRow.humidity;
+    PurpleAirData[location].lastseen = convertToMilliseconds(dbRow.lastseendata);
+    PurpleAirData[location].um03 = dbRow.um_03;
+    PurpleAirData[location].um05 = dbRow.um_05;
+    PurpleAirData[location].um1 = dbRow.um_1;
+    PurpleAirData[location].um25 = dbRow.um_25;
+    PurpleAirData[location].um5 = dbRow.um_5;
+    PurpleAirData[location].um10 = dbRow.um_10;
+
+    // Calculated values
+    PurpleAirData[location].correctedpm25 = correctPM25(dbRow.pm_25_cf, dbRow.humidity);
+    PurpleAirData[location].aqi = calcAQI(PurpleAirData[location].correctedpm25).toFixed(0);
+    PurpleAirData[location].bgcolor = getBGColorForAQI(PurpleAirData[location].aqi);
+}
+
 function saveSensorData(location, sensorData, sensorDataFields) {
     const pm1data = sensorData[sensorDataFields.indexOf(Fields.pm1)];
     const pm25data = sensorData[sensorDataFields.indexOf(Fields.pm25)];
@@ -139,6 +245,7 @@ function saveSensorData(location, sensorData, sensorDataFields) {
     PurpleAirData[location].um5 = um5data;
     PurpleAirData[location].um10 = um10data;
 
+    // Calculated values
     PurpleAirData[location].correctedpm25 = correctPM25(pm25_cf_1data, humiditydata);
     PurpleAirData[location].aqi = calcAQI(PurpleAirData[location].correctedpm25).toFixed(0);
     PurpleAirData[location].bgcolor = getBGColorForAQI(PurpleAirData[location].aqi);
