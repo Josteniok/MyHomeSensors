@@ -4,7 +4,7 @@ exports.getPurpleAirData = getPurpleAirData;
 exports.startPurpleAirRetrieval = startPurpleAirRetrieval;
 exports.getPurpleAirDataFromDB = getPurpleAirDataFromDB;
 
-const sqlite3 = require('sqlite3').verbose();
+const sqlite3DB = require('better-sqlite3');
 
 const purpleAirApiReadKey = process.env.API_READ_KEY || "";
 const outdoorsensorindex = process.env.OUTDOOR_SENSOR_INDEX || "";
@@ -101,22 +101,16 @@ function getPurpleAirReading(groupid) {
             response.outdoor.um5,
             response.outdoor.um10
         ];
-        let purpleairdb = new sqlite3.Database('./db/homesensors.db', (err) => {
-            if (err) {
-              return console.log(err.message);
-            }
-            console.log('Connected to the home sensors database.');
-        });
-        let purpleairinsertsql = 'INSERT INTO ' 
+        let purpleairdb = new sqlite3DB('./db/homesensors.db', { verbose: console.log });
+        purpleairdb.pragma('journal_mode = WAL');
+        let purpleairinsertsqlstatement = purpleairdb.prepare('INSERT INTO ' 
             + purpleAirTableName
             + ' (location,pm_1,pm_25,pm_10,pm_25_cf,humidity,lastseen,um_03,um_05,um_1,um_25,um_5,um_10) '
-            + ' VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?),(?,?,?,?,?,?,?,?,?,?,?,?,?)';
-        purpleairdb.run(purpleairinsertsql, purpleairinsertvalues, function(err) {
-            if (err) {
-                return console.log(err.message);
-            }
-            console.log('PurpleAir readings were inserted into the the database');
-        });
+            + ' VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?),(?,?,?,?,?,?,?,?,?,?,?,?,?)');
+        let runinfo = purpleairinsertsqlstatement.run(purpleairinsertvalues);
+
+        console.log('Inserted ' + runinfo.changes + ' rows into the database.');
+
         purpleairdb.close();
     });
 }
@@ -126,23 +120,14 @@ async function getPurpleAirData() {
 }
 
 async function getPurpleAirDataFromDB() {
-    let purpleairdb = new sqlite3.Database('./db/homesensors.db', (err) => {
-        if (err) {
-            return console.log(err.message);
-        }
-        console.log('Connected to the home sensors database for reading latest values');
-    });
+    let purpleairdb = new sqlite3DB('./db/homesensors.db', { verbose: console.log });
+    purpleairdb.pragma('journal_mode = WAL');
 
-    let purpleairsqlquery = 'SELECT * FROM ' + purpleAirTableName;
-
-    purpleairdb.all(purpleairsqlquery, [], (err, rows) => {
-        if (err) {
-            console.log(err.message);
-        }
-        rows.forEach((row) => {
-            saveSensorDataFromDB(row);
-        })
-    });
+    let purpleairsqlquerystatement = purpleairdb.prepare('SELECT * FROM ' + purpleAirTableName);
+    let rows = purpleairsqlquerystatement.all()
+    rows.forEach((row) => {
+        saveSensorDataFromDB(row);
+    })
 
     purpleairdb.close();
 
