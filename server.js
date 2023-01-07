@@ -34,11 +34,9 @@ app.get('/purpleair', (req, res) => {
 });
 
 app.get('/purpleairdumpall', (req, res) => {
-  /*purpleairdump.getDetails().then(response => {
+  purpleairdump.getDetails().then(response => {
     res.send("<pre>"+JSON.stringify(response, null, 2)+"</pre>");
-  });*/
-  /*let purpleairDBdata = purpleair.getPurpleAirDataFromDB();
-  res.send("<pre>"+JSON.stringify(purpleairDBdata, null, 2)+"</pre>")*/
+  });
 });
 
 app.get('/ambientweather', (req, res) => {

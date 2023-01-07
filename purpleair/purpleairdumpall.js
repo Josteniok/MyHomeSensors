@@ -16,7 +16,7 @@ async function getDetails() {
     let initObject = {
         method: 'GET', headers: customHeader,
     };
-    const response = await fetch("https://api.purpleair.com/v1/sensors/"+indoorsensorindex, initObject, {});
+    const response = await fetch("https://api.purpleair.com/v1/sensors/"+outdoorsensorindex, initObject, {});
     const json = await response.json();
 
     return json;
