@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+  <html>
+      <head>
+        <%- include('../partials/head'); %>
+      </head>
+      <body>
+          <div class = "grid-container">
+              <div class = "grid-item-full" style = "background-color:<%= purpleairdata.indoor.bgcolor %>">
+                  <p style = "font-size:3vw">Indoor AQI</p>
+                  <p><%= purpleairdata.indoor.aqi %></p>
+              </div>
+              <div class = "grid-item-full" style = "background-color:<%= purpleairdata.outdoor.bgcolor %>">
+                  <p style = "font-size:3vw">Outdoor AQI</p>
+                  <p><%= purpleairdata.outdoor.aqi %></p>
+              </div>
+          </div>
+          <script type = "text/javascript">
+            let purpleAirOutdoorTime = new Date(Number('<%- purpleairdata.outdoor.lastseen %>'));
+            let purpleAirIndoorTime = new Date(Number('<%- purpleairdata.indoor.lastseen %>'))
+            if (purpleAirOutdoorTime) {
+                document.getElementById("outdoorlastseen").innerHTML = purpleAirOutdoorTime.toLocaleString();
+            } else {
+                document.getElementById("outdoorlastseen").innerHTML = "Outdoor Time Not Found";
+            }
+            if (purpleAirIndoorTime) {
+                document.getElementById("indoorlastseen").innerHTML = purpleAirIndoorTime.toLocaleString();
+            } else {
+                document.getElementById("indoorlastseen").innerHTML = "Indoor Time Not Found";
+            }
+        </script>
+        </body>
+    </html>

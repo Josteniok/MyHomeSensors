@@ -45,6 +45,14 @@ app.get('/ambientweather', (req, res) => {
   });
 });
 
+app.get('/gooddayfor', (req, res) => {
+  purpleair.getPurpleAirDataFromDB().then(response => {
+    res.render('pages/gooddayfor', {
+      purpleairdata: response
+    });
+  });
+});
+
 const port = process.env.PORT || 8080;
 
 app.listen(port, () => {
