@@ -4,9 +4,9 @@
 const express = require('express');
 const app = express();
 
-const purpleairdump = require('./purpleair/purpleairdumpall');
-const purpleair = require('./purpleair/purpleair');
-const ambientweather = require('./ambientweather/ambientweather')
+const purpleairdump = require('./sensoraccess/purpleairdumpall');
+const purpleair = require('./sensoraccess/purpleair');
+const ambientweather = require('./sensoraccess/ambientweather')
 
 // Start the retrieval functions to store the sensor readings
 purpleair.startPurpleAirRetrieval();
