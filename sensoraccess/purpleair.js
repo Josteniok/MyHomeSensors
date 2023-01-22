@@ -67,11 +67,11 @@ let PurpleAirData = {
 };
 
 function startPurpleAirRetrieval() {
-    getPurpleAirReading();
-    let purpleAirRetriever = setInterval(getPurpleAirReading, 120000, sensorgroupid);
+    savePurpleAirReading();
+    let purpleAirRetriever = setInterval(savePurpleAirReading, 120000, sensorgroupid);
 }
 
-function getPurpleAirReading(groupid) {
+function savePurpleAirReading(groupid) {
     getPurpleAirData().then(response => {
         let purpleairinsertvalues = [
             'indoor',

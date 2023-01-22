@@ -10,6 +10,7 @@ const ambientweather = require('./sensoraccess/ambientweather')
 
 // Start the retrieval functions to store the sensor readings
 purpleair.startPurpleAirRetrieval();
+ambientweather.startAmbientWeatherRetrieval();
 
 // Set up EJS as the view engine
 app.set('view engine', 'ejs');

@@ -1,7 +1,7 @@
 CREATE TABLE ambientweather (
     reading_id INTEGER PRIMARY KEY,
     dateutc INTEGER NOT NULL,
-    localdate TEXT NOT NULL,
+    datez TEXT NOT NULL,
     baromrelin REAL NOT NULL,
     baromabsin REAL NOT NULL,
     tempf REAL NOT NULL,
