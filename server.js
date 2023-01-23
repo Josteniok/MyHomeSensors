@@ -41,7 +41,7 @@ app.get('/purpleairdumpall', (req, res) => {
 });
 
 app.get('/ambientweather', (req, res) => {
-  ambientweather.getInfo().then(response => {
+  ambientweather.getAmbientWeatherDataFromDB().then(response => {
     res.send("<pre>"+JSON.stringify(response, null, 2)+"</pre>");
   });
 });

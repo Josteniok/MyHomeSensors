@@ -2,11 +2,12 @@
 
 exports.getInfo = getInfo;
 exports.startAmbientWeatherRetrieval = startAmbientWeatherRetrieval;
+exports.getAmbientWeatherDataFromDB = getAmbientWeatherDataFromDB;
 
 const AmbientWeatherApi = require('ambient-weather-api');
 const sqlite3DB = require('better-sqlite3');
 
-const ambientweathertablename = 'ambientweather';
+const ambientWeatherTableName = 'ambientweather';
 
 const ambientWeatherApiKey = process.env.AMBIENT_API_KEY || "";
 const ambientWeatherAppKey = process.env.AMBIENT_APPLICATION_KEY || "";
@@ -71,7 +72,7 @@ async function saveAmbientWeatherReading() {
     ambientweatherdb.pragma('journal_mode = WAL');
 
     let ambientairinsertsqlstatement = ambientweatherdb.prepare('INSERT INTO ' 
-        + ambientweathertablename
+        + ambientWeatherTableName
         + ' (dateutc, datez, baromrelin, baromabsin, tempf, tempinf,'
         + ' temp1f, humidity, humidityin, humidity1, winddir, windspeedmph,'
         + ' windspdmph_avg10m, windgustmph, maxdailygust, hourlyrainin,'
@@ -81,4 +82,20 @@ async function saveAmbientWeatherReading() {
     let runinfo = ambientairinsertsqlstatement.run(ambientairinsertvalues);
 
     ambientweatherdb.close();
+}
+
+async function getAmbientWeatherDataFromDB() {
+  let ambientweatherdb = new sqlite3DB('./db/homesensors.db', { verbose: console.log });
+  ambientweatherdb.pragma('journal_mode = WAL');
+
+  let latestreadingstatement = ambientweatherdb.prepare(
+      'SELECT * FROM ' + ambientWeatherTableName 
+      + ' WHERE dateutc = (SELECT MAX(dateutc) FROM ' + ambientWeatherTableName + ' )'
+  );
+
+  let latestreading = latestreadingstatement.get();
+
+  ambientweatherdb.close();
+
+  return latestreading;
 }
