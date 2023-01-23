@@ -18,12 +18,6 @@ const api = new AmbientWeatherApi({
 
 async function getInfo() {
     const sensors = await api.userDevices();
-    
-    // Just use the first device since we don't currently have multiple
-    // devices.
-    const sensorData = await api.deviceData(sensors[0].macAddress, { limit: 3 });
-
-    console.log(JSON.stringify(sensorData, null, 2));
 
     return sensors;
 }
