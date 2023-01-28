@@ -117,7 +117,7 @@ async function getPurpleAirData() {
     return getAqi(sensorgroupid);
 }
 
-async function getPurpleAirDataFromDB() {
+function getPurpleAirDataFromDB() {
     let purpleairdb = new sqlite3DB('./db/homesensors.db', { verbose: console.log });
     purpleairdb.pragma('journal_mode = WAL');
 
@@ -137,9 +137,6 @@ async function getPurpleAirDataFromDB() {
 
     return PurpleAirData;
 }
-
-// Repeat pulls
-// let indoorAQI = setInterval(getAqi, 120000, sensorgroupid);
 
 async function getAqi(groupid) {
     let customHeader = new Headers();

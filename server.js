@@ -7,6 +7,7 @@ const app = express();
 const purpleairdump = require('./sensoraccess/purpleairdumpall');
 const purpleair = require('./sensoraccess/purpleair');
 const ambientweather = require('./sensoraccess/ambientweather');
+const gooddayanalysis = require('./sensoraccess/gooddayanalysis');
 
 // Start the retrieval functions to store the sensor readings
 purpleair.startPurpleAirRetrieval();
@@ -27,10 +28,9 @@ app.get('/', (req, res) => {
 });
 
 app.get('/purpleair', (req, res) => {
-  purpleair.getPurpleAirDataFromDB().then(response => {
-    res.render('pages/currentpurpleair', {
-      purpleairdata: response
-    });
+  let purpleairdata = purpleair.getPurpleAirDataFromDB();
+  res.render('pages/currentpurpleair', {
+    purpleairdata: purpleairdata
   });
 });
 
@@ -41,17 +41,14 @@ app.get('/purpleairdumpall', (req, res) => {
 });
 
 app.get('/ambientweather', (req, res) => {
-  ambientweather.getAmbientWeatherDataFromDB().then(response => {
+  ambientweather.getInfo().then(response => {
     res.send("<pre>"+JSON.stringify(response, null, 2)+"</pre>");
   });
 });
 
 app.get('/gooddayfor', (req, res) => {
-  purpleair.getPurpleAirDataFromDB().then(response => {
-    res.render('pages/gooddayfor', {
-      purpleairdata: response
-    });
-  });
+  let ambientweatherdata = gooddayanalysis.testfunction();
+  res.send("<pre>"+JSON.stringify(ambientweatherdata, null, 2)+"</pre>")
 });
 
 const port = process.env.PORT || 8080;

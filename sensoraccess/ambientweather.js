@@ -84,7 +84,7 @@ async function saveAmbientWeatherReading() {
     ambientweatherdb.close();
 }
 
-async function getAmbientWeatherDataFromDB() {
+function getAmbientWeatherDataFromDB() {
   let ambientweatherdb = new sqlite3DB('./db/homesensors.db', { verbose: console.log });
   ambientweatherdb.pragma('journal_mode = WAL');
 
