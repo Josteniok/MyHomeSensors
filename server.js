@@ -47,8 +47,10 @@ app.get('/ambientweather', (req, res) => {
 });
 
 app.get('/gooddayfor', (req, res) => {
-  let ambientweatherdata = gooddayanalysis.testfunction();
-  res.send("<pre>"+JSON.stringify(ambientweatherdata, null, 2)+"</pre>")
+  let gooddayfordata = gooddayanalysis.getGoodDayForData();
+  res.render('pages/gooddayfor', {
+    gooddayfordata: gooddayfordata
+  });
 });
 
 const port = process.env.PORT || 8080;
