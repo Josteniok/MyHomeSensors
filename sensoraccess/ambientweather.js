@@ -31,10 +31,6 @@ function startAmbientWeatherRetrieval() {
 async function saveAmbientWeatherReading() {
     const sensors = await api.userDevices();
 
-    // Just use the first device since we don't currently have multiple
-    // devices. Get the last three readings.
-    // const sensorData = await api.deviceData(sensors[0].macAddress, { limit: 3 });
-
     let lastData = sensors[0].lastData;
 
     let ambientairinsertvalues = [
