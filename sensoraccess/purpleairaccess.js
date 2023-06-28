@@ -37,7 +37,7 @@ const Fields = {
 getAqi(sensorgroupid);
 
 // Repeat pulls
-let indoorAQI = setInterval(getAqi, 120000, sensorgroupid);
+let indoorAQI = setInterval(getAqi, 600000, sensorgroupid);
 
 function getAqi(groupid) {
     let customHeader = new Headers();
